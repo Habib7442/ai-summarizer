@@ -1,11 +1,16 @@
+"use client";
 import Signin from "@/components/Signin";
 import Signup from "@/components/Signup";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAppSelector } from "@/provider/store";
+import Link from "next/link";
 
 const LandingPage = () => {
+  const isLogged: any = useAppSelector((state) => state.auth.isLogged);
+  console.log(isLogged);
   return (
     <main className="w-full h-full">
       {/* Navbar */}
@@ -25,9 +30,15 @@ const LandingPage = () => {
                 Learn More
               </Button>
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">Sign up</Button>
-                </DialogTrigger>
+                {isLogged ? (
+                  <Link href="/dashboard">
+                    <Button variant="outline">Go to Dashboard</Button>
+                  </Link>
+                ) : (
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Sign up</Button>
+                  </DialogTrigger>
+                )}
                 <DialogContent className="h-[550px] overflow-hidden bg-transparent border-none">
                   <Tabs defaultValue="account" className="w-[350px] mx-auto">
                     <TabsList className="grid w-full grid-cols-2">
