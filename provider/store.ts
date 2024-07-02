@@ -3,7 +3,6 @@ import { persistReducer } from "redux-persist";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { articleApi } from "./redux/article";
 import authReducer from "./redux/authSlice";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import persistStore from "redux-persist/es/persistStore";
 
 const createNoopStorage = () => {
@@ -20,10 +19,15 @@ const createNoopStorage = () => {
   };
 };
 
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createNoopStorage();
+const isClient = typeof window !== "undefined";
+
+let storage;
+if (isClient) {
+  const createWebStorage = require("redux-persist/lib/storage/createWebStorage").default;
+  storage = createWebStorage("local");
+} else {
+  storage = createNoopStorage();
+}
 
 const persistConfig = {
   key: "root",
